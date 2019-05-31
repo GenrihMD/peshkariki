@@ -1,6 +1,11 @@
 <template>
     <div id="app">
         <b-container>
+            <b-row>
+                <b-col cols="12">
+                    <h1>Общая сумма товаров в корзине: {{ totalPrice }}</h1>
+                </b-col>
+            </b-row>
             <b-form @submit="onSubmit">
                 <b-row>
                     <b-col cols="8">
@@ -70,8 +75,8 @@ export default {
             products: [{
                 id: 1,
                 name: "Jeans",
-                number: "1",
-                price: "1200"
+                number: 1,
+                price: 1200
             }, ],
             nextProductId: 2,
             show: true
@@ -87,15 +92,22 @@ export default {
             this.products.push({
                 id: this.nextProductId,
                 name: "",
-                number: "",
-                price: ""
+                number: 1,
+                price: 0
             })
             this.nextProductId = this.nextProductId + 1;
         },
         removeProduct(id) {
-            this.products = this.products.filter(todo => {
-                return todo.id !== id
+            this.products = this.products.filter(product => {
+                return product.id !== id
             })
+        }
+    },
+    computed: {
+        totalPrice: function() {
+            return this.products.reduce((sum, product) => {
+                return sum + (product.price * product.number)
+            }, 0)
         }
     }
 }
