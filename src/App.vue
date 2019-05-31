@@ -1,61 +1,63 @@
 <template>
     <div id="app">
         <b-container>
-            <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+            <b-form @submit="onSubmit">
                 <b-row>
-                    <div class="col-8">
+                    <b-col cols="8">
                         <div class="products">
-                            <li v-for="product in products">
-                              {{ product.name }}
-                            </li>
-                            <b-row>
-                                <b-col cols="6">
-                                    <b-form-group id="input-group-2" label-for="input-2">
-                                        <b-form-input id="input-2" v-model="form.name" required placeholder="Enter name"></b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col cols="3">
-                                    <b-form-group id="input-group-2" label-for="input-2">
-                                        <b-form-input id="input-2" v-model="form.name" required placeholder="Enter name"></b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col cols="2">
-                                    <b-form-group id="input-group-2" label-for="input-2">
-                                        <b-form-input id="input-2" v-model="form.name" type="number" required placeholder="Enter name"></b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col cols="1">
-                                    <b-button type="button" variant="danger">-</b-button>
-                                </b-col>
-                            </b-row>
-                            <b-button type="button" variant="primary">Add</b-button>
-
+                            <template v-for="product in products">
+                                <b-row>
+                                    <b-col cols="6">
+                                        <b-form-group id="input-group-2" label-for="input-2">
+                                            <b-form-input id="input-2" v-model="product.name" required placeholder="Product name"></b-form-input>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="3">
+                                        <b-form-group id="input-group-2" label-for="input-2">
+                                            <b-form-input id="input-2" v-model="product.price" required placeholder="Product price"></b-form-input>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="2">
+                                        <b-form-group id="input-group-2" label-for="input-2">
+                                            <b-form-input id="input-2" v-model="product.number" type="number" required placeholder="Enter name"></b-form-input>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col cols="1">
+                                        <b-button type="button" variant="danger"  @click="removeProduct(product.id)">-</b-button>
+                                    </b-col>
+                                </b-row>
+                            </template>
+                            <b-button type="button" variant="primary" @click="addProduct">Add product</b-button>
                         </div>
-                    </div>
-                    <div class="col-4">
+                    </b-col>
+                    <b-col cols="4">
                         <b-form-group id="input-group-2">
                             <b-form-input id="input-2" v-model="form.name" required placeholder="Enter name"></b-form-input>
                         </b-form-group>
                         <b-form-group id="input-group-2">
-                            <b-form-input id="input-2" v-model="form.phone" required placeholder="Enter phone"></b-form-input>
+                            <b-form-input id="input-2" v-model="form.name" required placeholder="Enter phone"></b-form-input>
                         </b-form-group>
                         <b-form-group id="input-group-1">
                             <b-form-input id="input-1" v-model="form.email" type="email" required placeholder="Enter email"></b-form-input>
                         </b-form-group>
-                    </div>
+                    </b-col>
                 </b-row>
                 <b-row>
-                    <b-button type="submit" variant="primary">Submit</b-button>
-                    <b-button type="reset" variant="danger">Reset</b-button>
+                    <b-col md="1" offset="5" class="mt-3">
+                        <b-button type="submit" variant="primary">Submit</b-button>
+                    </b-col>
                 </b-row>
             </b-form>
         </b-container>
-        <b-card class="mt-3" header="Form Data Result">
+        <b-card class="mt-3" header="Result">
             <pre class="m-0">{{ form }}</pre>
+            <pre class="m-0">{{ products }}</pre>
         </b-card>
     </div>
 </template>
 <script>
+import Cart from './components/Cart.vue'
+
 export default {
     name: 'app',
     data() {
@@ -64,8 +66,14 @@ export default {
                 email: '',
                 name: '',
                 phone: '',
-                products: {},
             },
+            products: [{
+                id: 1,
+                name: "Jeans",
+                number: "1",
+                price: "1200"
+            }, ],
+            nextProductId: 2,
             show: true
         }
     },
@@ -74,17 +82,19 @@ export default {
             evt.preventDefault()
             alert(JSON.stringify(this.form))
         },
-        onReset(evt) {
-            evt.preventDefault()
-            // Reset our form values
-            this.form.email = ''
-            this.form.name = ''
-            this.form.food = null
-            this.form.checked = []
-            // Trick to reset/clear native browser form validation state
-            this.show = false
-            this.$nextTick(() => {
-                this.show = true
+        addProduct() {
+            console.log(this);
+            this.products.push({
+                id: this.nextProductId,
+                name: "",
+                number: "",
+                price: ""
+            })
+            this.nextProductId = this.nextProductId + 1;
+        },
+        removeProduct(id) {
+            this.products = this.products.filter(todo => {
+                return todo.id !== id
             })
         }
     }
@@ -101,8 +111,8 @@ export default {
 }
 
 .products {
-  border: 1px solid #777777;
-  padding: 5px;
-  border-radius: 2px;
+    border: 1px solid #bbbbbb88;
+    padding: 5px;
+    border-radius: 4px;
 }
 </style>
