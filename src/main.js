@@ -6,7 +6,8 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 
 Vue.use(BootstrapVue)
 
-new Vue({
+let myApp = new Vue({
   el: '#app',
   render: h => h(App)
 })
+window.app = myApp
